@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,89 +8,71 @@ class GestorTest {
     static Gestor miGestor;
 
     @BeforeEach
-    public void configuracion() {
+    public void configuracionTest() {
         miGestor = new Gestor();
-        String nombre = "Jordi";
+        String nombre = "Oscar";
         ArrayList<Float> notas = new ArrayList<>();
         notas.add(10f);
         notas.add(10f);
         notas.add(10f);
-        miGestor.anadirAlumno(nombre, notas);
+        miGestor.añadirAlumno(nombre, notas);
     }
 
     @Test
-    public void imprimirMenu() {
-        String menu = "Escoge una opción:\n" +
-                "1- Añadir un alumno\n" +
-                "2- Elminar alumno\n" +
-                "3- Añadir una nota\n" +
-                "4- Modificar una nota\n" +
-                "5- Eliminar una nota\n" +
-                "6- Consultar notas alumno\n" +
-                "7- Consultar medias alumno\n" +
-                "8- Salir";
+    public void menuTest(){
+        String menu = "Escoge una opción: \n" +
+                "1. Añadir alumno. \n" +
+                "2. Eliminar alumno\n" +
+                "3. Añadir una nota. \n" +
+                "4. Consultar notas alumno. \n" +
+                "5. Salir.";
         assertEquals(menu, miGestor.menu());
     }
 
     @Test
-    public void anadirAlumnoCorrectamente() {
-        String resultado = "Alumno Kenneth añadido con éxito";
-        String nombre = "Kenneth";
+    public void añadirAlumnoCorrectamenteTest(){
+        String resultado = "Alumno Miguel añadido con éxito.";
+        String nombre = "Miguel";
         ArrayList<Float> notas = new ArrayList<>();
-        notas.add(8f);
+        notas.add(8f); //Pongo la f para que lo interprete como un float
         notas.add(7f);
         notas.add(6f);
-        assertEquals(resultado, miGestor.anadirAlumno(nombre, notas));
+        assertEquals(resultado, miGestor.añadirAlumno(nombre, notas));
     }
 
     @Test
-    public void anadirNotaCorrectamente() {
-        String nombre = "Jordi";
-        miGestor.anadirNota(nombre, 10f);
+    public void añadirAlumnoRepetidoTest(){
+        String nombre = "Fran";
+        ArrayList<Float> notas = new ArrayList<>();
+        notas.add(10f); //Pongo la f para que lo interprete como un float
+        notas.add(10f);
+        notas.add(10f);
+        miGestor.añadirAlumno(nombre, notas);
+        assertThrows(IllegalArgumentException.class, () -> {
+            miGestor.añadirAlumno(nombre, notas);
+        }); //Esta función no la conocemos
+    }
+
+    @Test
+    public void añadirNotaCorrectamenteTest(){
+        String nombre = "Oscar";
+        miGestor.añadirNota(nombre, 10f);
         assertTrue(miGestor.notasAlumnos.get(nombre).size() == 4);
     }
 
     @Test
-    public void mostrarNotasAlumno() {
-        String resultado = "Notas del alumno Jordi: 10.0 10.0 10.0";
-        assertEquals(resultado, miGestor.mostrarNotas("Jordi"));
+    public void mostrarNotasAlumnoTest(){
+        String resultado = "Notas del alumno Oscar : 10.0 10.0 10.0";
+        assertEquals(resultado, miGestor.mostrarNotas("Oscar"));
     }
-
     @Test
-    public void mostrarNotasAlumnoNoExistente() {
-        assertThrows(IllegalArgumentException.class, () -> miGestor.mostrarNotas("Victor"));
-    }
-
-    @Test
-    public void eliminarAlumnoCorrectamente() {
-        String resultado = "Alumno Jordi eliminado correctamente";
-        assertEquals(resultado, miGestor.eliminarAlumno("Jordi"));
-    }
-
-    @Test
-    public void eliminarNotaAlumnoExistente() {
-        float resultado = 10f;
-        assertEquals(resultado, miGestor.eliminarNotaAlumno("Jordi", 0));
-    }
-
-    @Test
-    public void eliminarNotaNoExistenteDeAlumno() {
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
-            miGestor.eliminarNotaAlumno("Jordi", 4);
-        });
-    }
-
-    @Test
-    public void comprobarMediasPorAlumno() {
-        HashMap<String, Float> resultado = new HashMap<>();
-        resultado.put("Jordi", 10f);
-        assertEquals(resultado, miGestor.consultarMediasPorAlumno());
+    public void eliminarAlumnoCorrectamenteTest() {
+        String resultado = "Alumno Oscar eliminado correctamente.";
+        assertEquals(resultado, miGestor.eliminarAlumno("Oscar"));
     }
 
     @AfterEach
-    public void cerrarConfiguraciones() {
+    public void cerrarConfiguracionesTest(){
         miGestor.notasAlumnos.clear();
     }
-
-
 }

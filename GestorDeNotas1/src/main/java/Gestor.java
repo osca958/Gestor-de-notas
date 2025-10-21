@@ -24,123 +24,91 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Gestor {
-   static HashMap<String, ArrayList<Float>> notasAlumnos = new HashMap<>();
-
+   HashMap<String, ArrayList<Float>> notasAlumnos;
+    public Gestor(){
+        notasAlumnos = new HashMap<>();
+    }
     /**
      * Función que construye el menú de la aplicación.
-     * @return menu - String que contiene el menú de la aplicación a imprimir
+     * @return String que contiene el menú de la aplicación a imprimir
      */
-    public static String menu () {
+    public String menu() {
         String menu = "Escoge una opción: \n" +
                 "1. Añadir alumno. \n" +
-                "2. Añadir una nota. \n" +
-                "3. Consultar notas alumno. \n" +
-                "4. Salir.";
+                "2. Eliminar alumno\n" +
+                "3. Añadir una nota. \n" +
+                "4. Consultar notas alumno. \n" +
+                "5. Salir.";
         return menu;
     }
 
     /**
      * Funcion que comprueba si existe alumno y si no existe lo añade al diccionario
-     * @param nombre - Nombre del alumno
-     * @param notas - Lista de notas del alummno
+     * @param nombre  Nombre del alumno
+     * @param notas  Lista de notas del alummno
      * @throws IllegalArgumentException - El alumno ya existe en el sistema
      */
-    public static void añadirAlumno(String nombre, ArrayList<Float> notas){
+    public  String añadirAlumno(String nombre, ArrayList<Float> notas){
         if(notasAlumnos.containsKey(nombre)){
             throw new IllegalArgumentException("El alumno " + nombre + " ya existe. ");
         }
         notasAlumnos.put(nombre, notas);
-        System.out.printf("Alumno %s añadido con exito.", nombre);
+        return "Alumno " + nombre + " añadido con éxito.";
     }
 
     /**
      * Función que añade una nota para un alumno existente
-     * @param nombre - Nombre del alumno
-     * @param nota - Nota del alumno
+     * @param nombre  Nombre del alumno
+     * @param nota  Nota del alumno
      * @throws IllegalArgumentException - Alumno no existente en sistema
      */
 
-    public static void añadirNota (String nombre, Float nota){
+    public String añadirNota(String nombre, Float nota){
         if (!notasAlumnos.containsKey(nombre)){
             throw  new IllegalArgumentException("El alumno " + nombre + " no existe.");
         }
         notasAlumnos.get(nombre).add(nota);
-        System.out.printf("Nota %.2f añadida al alumno %s con éxito.\n",nota, nombre);
+        return "Nota " + nota + " añadida al alumno " + nombre + " con éxito";
 
     }
 
     /**
      * Función para mostrar las notas de un alumno
-     * @param nombre - Nombre del alumno
+     * @param nombre  Nombre del alumno
+     * @return Mensaje de confirmación
      * @throws IllegalArgumentException - Alumno no existente en el sistema
      */
 
-    public static void mostrarNotas(String nombre){
+    public String mostrarNotas(String nombre){
         if(!notasAlumnos.containsKey(nombre)){
             throw new IllegalArgumentException("El alumno " + nombre + " no existe.");
         }
-        System.out.println("Notas del alumno " + nombre + " :");
+        String resultado = "Notas del alumno " + nombre + " : ";
         for ( int i = 0; i < notasAlumnos.get(nombre).size(); i++){
-            System.out.print(notasAlumnos.get(nombre).get(i) + " ");
+            resultado += notasAlumnos.get(nombre).get(i) + " ";
         }
-        System.out.println();
+        resultado = resultado.stripTrailing();
+        return resultado;
     }
 
     /**
-     * Función principal del programa
-     * @param args
+     * Función para eliminar alumno del sistema
+     * @param nombre
+     * @return Mensaje de confirmación
+     * @throws IllegalArgumentException - Alumno no existente en el sistema
      */
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int opcion = 0;
-        while(opcion!=4){
-            System.out.println(menu());
-            opcion = scanner.nextInt();
-            scanner.nextLine();
-            String nombre = "";
-            switch (opcion) {
-                case 1:
-                    System.out.println("Inserta el nombre del alumno que quieres añadir: ");
-                    nombre = scanner.nextLine();
-                    System.out.println("Inserta las notas de dicho alumno separadas por espacio: ");
-                    ArrayList<Float> notas = new ArrayList<>();
-                    String[] notasInput = scanner.nextLine().split(" ");
-                    for (int i=0; i < notasInput.length; i++){
-                        notas.add(Float.parseFloat(notasInput[i]));
-                    }
-                    try {
-                        añadirAlumno(nombre, notas);
-                    } catch (IllegalArgumentException ie) {
-                        System.err.println(ie.getMessage());
-                    }
-                    break;
-                case 2:
-                    System.out.println("Inserta el nombre del alumno: ");
-                    nombre = scanner.nextLine();
-                    System.out.println("Introduce la nota que quieres añadir: ");
-                    float nota = scanner.nextFloat();
-                    scanner.nextLine();
-                    try {
-                        añadirNota(nombre, nota);
-                    } catch (IllegalArgumentException ie){
-                        System.err.println(ie.getMessage());
-                    }
-                    break;
-                case 3:
-                    System.out.println("Introduce el nombre del alumno: ");
-                    nombre = scanner.nextLine();
-                    try {
-                        mostrarNotas(nombre);
-                    }catch(IllegalArgumentException ie) {
-                        System.err.println(ie.getMessage());
-                    }
-                    break;
 
-                    //TODO mostrarNotas(String nombre)
-            }
+    public String eliminarAlumno(String nombre){
+        //Primero compruebo si el alumno existe en el notasAlumnos
+        //Si no existe lanzo excepcion
+         //Si existe elimino el alumno y devuelvo string de confirmacion
+        if(notasAlumnos.remove(nombre) == null){
+            throw new IllegalArgumentException("El alumno " + nombre + " no existe en el sistema.");
         }
-        System.out.println(menu());
+        return "Alumno " + nombre + " eliminado correctamente.";
     }
+
+
 
 
 }
